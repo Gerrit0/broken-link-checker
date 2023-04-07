@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "node16",
+    "outDir": "dist",
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "strict": true
+  }
+}
