@@ -1,6 +1,6 @@
 {
   "name": "@gerrit0/broken-link-checker",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Check for broken links on a site.",
   "type": "module",
   "exports": "./dist/index.js",
@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "ts-node --esm --transpile-only src/cli.ts",
+    "prepublishOnly": "pnpm run build",
     "build": "tsc"
   },
   "keywords": [],
@@ -27,5 +28,8 @@
   },
   "imports": {
     "#info": "./package.json"
-  }
+  },
+  "files": [
+    "dist/*"
+  ]
 }
