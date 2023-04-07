@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import cmdTs from "./cmd-ts.cjs";
 const {
     multioption,
