@@ -74,13 +74,30 @@ const cmd = command({
     description: packageInfo.description,
     version: packageInfo.version,
     args: {
-        recursive: flag({ short: "r", long: "recursive", type: boolean }),
-        internal: flag({ short: "i", long: "internal", type: boolean }),
-        external: flag({ short: "e", long: "external", type: boolean }),
+        recursive: flag({
+            short: "r",
+            long: "recursive",
+            type: boolean,
+            description: "Also check pages linked to by the original page.",
+        }),
+        internal: flag({
+            short: "i",
+            long: "internal",
+            type: boolean,
+            description: "Check internal links.",
+        }),
+        external: flag({
+            short: "e",
+            long: "external",
+            type: boolean,
+            description: "Check external links.",
+        }),
         exclude: multioption({
             short: "x",
             long: "exclude",
             type: array(string),
+            description:
+                "RegEx URL patterns to not recurse to when checking pages.",
         }),
         url: positional({ type: HttpUrl }),
     },
