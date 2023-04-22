@@ -33,19 +33,31 @@ async function report(root: URL, options: Options) {
         return patterns.every((pat) => !pat.test(url.href));
     }
 
+    let pages = 0;
+    let goodLinks = 0;
+    let badLinks = 0;
+    let ignoredLinks = 0;
     for await (const page of checker.run(root, {
         shouldRecurse,
     })) {
+        pages++;
         if (!page.exists) {
             console.error(`${page.url} does not exist`);
+            badLinks++;
             continue;
         }
 
         for (const link of page.linksInPage) {
             if (link.hostname === root.hostname) {
-                if (!options.internal) continue;
+                if (!options.internal) {
+                    ignoredLinks++;
+                    continue;
+                }
             } else {
-                if (!options.external) continue;
+                if (!options.external) {
+                    ignoredLinks++;
+                    continue;
+                }
             }
 
             const child = await checker.fetch(link);
@@ -53,9 +65,9 @@ async function report(root: URL, options: Options) {
                 console.error(
                     `${page.url} links to ${link.href}, which does not exist`
                 );
+                badLinks++;
                 continue;
-            }
-            if (link.hash) {
+            } else if (link.hash) {
                 if (!child.ids.has(link.hash.substring(1))) {
                     const noHash = new URL(link);
                     noHash.hash = "";
@@ -63,11 +75,19 @@ async function report(root: URL, options: Options) {
                     console.error(
                         `${page.url} links to hash ${link.hash} within ${noHash.href}, which does not exist`
                     );
+                    badLinks++;
                     continue;
+                } else {
+                    goodLinks++;
                 }
             }
         }
     }
+
+    console.log(
+        `Checked ${pages} pages for broken links, found ${goodLinks} working links, ${badLinks} broken links, ignored ${ignoredLinks} links`
+    );
+    process.exit(badLinks);
 }
 
 const cmd = command({
